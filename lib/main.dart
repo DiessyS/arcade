@@ -1,10 +1,15 @@
 import 'package:arcade/route/internal_router.dart';
+import 'package:arcade/service/location_service.dart';
 import 'package:arcade/service_registers.dart' as register;
+import 'package:arcade/service_registers.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   register.serviceRegister();
+
+  await service<LocationService>().init();
+
   runApp(const Main());
 }
 

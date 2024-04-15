@@ -10,11 +10,14 @@ class MainPage extends StatelessWidget {
       child: Container(
         color: Color(0xFF070F2B),
         child: Padding(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(16),
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              EventMap(),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: EventMap(),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
                 child: TextField(

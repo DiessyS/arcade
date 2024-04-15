@@ -12,4 +12,15 @@ enum MultiEventType {
         return '';
     }
   }
+
+  fromLabel(String label) {
+    switch (label) {
+      case 'Limite':
+        return MultiEventType.limit;
+      case 'Caminho':
+        return MultiEventType.road;
+      default:
+        return null;
+    }
+  }
 }

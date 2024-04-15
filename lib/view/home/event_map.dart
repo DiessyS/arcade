@@ -1,21 +1,16 @@
+import 'package:arcade/enum/event_type.dart';
 import 'package:arcade/models/event_model.dart';
 import 'package:arcade/models/marker_model.dart';
 import 'package:arcade/models/multi_event_model.dart';
 import 'package:arcade/service/map_service.dart';
 import 'package:arcade/service_registers.dart';
+import 'package:arcade/view/home/map/limit.dart';
+import 'package:arcade/view/home/map/places.dart';
+import 'package:arcade/view/home/map/user_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:latlong2/latlong.dart';
-
-extension on double {
-  double get bounded {
-    if (this > 180) {
-      return this - 360;
-    }
-    return this;
-  }
-}
 
 class EventMap extends StatefulWidget {
   EventMap({super.key});
@@ -43,11 +38,14 @@ class _EventMapState extends State<EventMap> {
   bool insertingLimit = false;
   bool insertingRoad = false;
 
+  Stream<LatLng> locationStream = const Stream.empty();
+
   insertPlace(LatLng latlng, String title, String description, context) {
     EventModel event = EventModel();
     event.title = title;
     event.description = description;
     event.marker.fromLatLng(latlng);
+    event.type = EventType.place;
 
     places.add(event);
   }
@@ -57,6 +55,7 @@ class _EventMapState extends State<EventMap> {
     event.title = title;
     event.description = description;
     event.marker.fromLatLng(latlng);
+    event.type = EventType.temp;
 
     tempPlaces.add(event);
   }
@@ -71,15 +70,12 @@ class _EventMapState extends State<EventMap> {
     return LatLng(-25.051366806523237, -50.13217808780914);
   }
 
-  getDirection() {
-    LatLng user = getUserLocation();
+  getDirection(user) {
     LatLng target = places.first.asLatLng();
-
     return service<MapService>().calculateBearing(user.latitude, user.longitude, target.latitude, target.longitude);
   }
 
-  getDistance() {
-    LatLng user = getUserLocation();
+  getDistance(user) {
     LatLng target = places.first.asLatLng();
 
     var distance =
@@ -88,8 +84,23 @@ class _EventMapState extends State<EventMap> {
     return distance;
   }
 
+  simulateMovimentOnUserLocation() {
+    locationStream = Stream.periodic(
+      const Duration(seconds: 1),
+      (count) {
+        LatLng user = getUserLocation();
+
+        double lat = user.latitude + (0.0001 * count);
+
+        return LatLng(lat, user.longitude);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    //simulateMovimentOnUserLocation();
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -184,137 +195,10 @@ class _EventMapState extends State<EventMap> {
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'dev.fleaflet.flutter_map.example',
             ),
-            // ----------------- //
-            //    Area limit     //
-            // ----------------- //
-            PolygonLayer(
-              polygons: [
-                Polygon(
-                  points: limit.asLatLngList(),
-                  color: Colors.red.withOpacity(0.1),
-                  isFilled: true,
-                  isDotted: true,
-                  borderColor: Colors.red,
-                  borderStrokeWidth: 3.0,
-                ),
-              ],
-            ),
-            // ----------------- //
-            //      Places       //
-            // ----------------- //
-            MarkerLayer(
-              markers: places
-                  .map(
-                    (e) => Marker(
-                      width: 100.0,
-                      height: 80.0,
-                      point: e.marker.toLatLng(),
-                      child: GestureDetector(
-                        onTapDown: (details) {
-                          final offset = details.globalPosition;
-                          showMenu(
-                            context: context,
-                            position: RelativeRect.fromLTRB(
-                              offset.dx,
-                              offset.dy,
-                              MediaQuery.of(context).size.width - offset.dx,
-                              MediaQuery.of(context).size.height - offset.dy,
-                            ),
-                            items: [
-                              PopupMenuItem(
-                                child: const Text('Rename'),
-                                onTap: () async {
-                                  setState(() {});
-                                },
-                              ),
-                              PopupMenuItem(
-                                child: const Text('Delete'),
-                                onTap: () async {
-                                  setState(() {});
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            Text(
-                              e.title,
-                              style: TextStyle(
-                                color: Colors.green,
-                              ),
-                            ),
-                            Icon(
-                              Icons.place,
-                              size: 25.0,
-                              color: Colors.green,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-            // ----------------- //
-            //       Temp        //
-            // ----------------- //
-            MarkerLayer(
-              markers: tempPlaces
-                  .map(
-                    (e) => Marker(
-                      width: 100.0,
-                      height: 80.0,
-                      point: e.marker.toLatLng(),
-                      child: GestureDetector(
-                        child: Column(
-                          children: [
-                            Text(
-                              e.title,
-                              style: TextStyle(
-                                color: Colors.blue,
-                              ),
-                            ),
-                            Icon(
-                              Icons.add_location,
-                              size: 25.0,
-                              color: Colors.blue,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-            // ----------------- //
-            //   User Location   //
-            // ----------------- //
-            MarkerLayer(
-              markers: [
-                Marker(
-                  width: 100.0,
-                  height: 80.0,
-                  point: getUserLocation(),
-                  child: const Column(
-                    children: [
-                      Text(
-                        'Você',
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
-                      Icon(
-                        Icons.location_on,
-                        size: 25.0,
-                        color: Colors.red,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
+            Limit(limit: limit),
+            Places(points: places, tempPoints: tempPlaces),
+            UserLocation(),
+            /*
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Align(
@@ -322,31 +206,39 @@ class _EventMapState extends State<EventMap> {
                 child: Container(
                   height: 124,
                   decoration: BoxDecoration(
-                    color: Colors.black45,
+                    color: Colors.black.withOpacity(0.48),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Column(
-                    children: [
-                      RotationTransition(
-                        turns: AlwaysStoppedAnimation(getDirection() / 360),
-                        child: Icon(
-                          Icons.arrow_upward,
-                          size: 92,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        '${getDistance().toStringAsFixed(2)}m',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
+                  child: StreamBuilder<LatLng>(
+                    stream: broadcastStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          children: [
+                            RotationTransition(
+                                turns: AlwaysStoppedAnimation(getDirection(snapshot.data!) / 360),
+                                child: Icon(
+                                  Icons.arrow_upward,
+                                  size: 92,
+                                  color: Colors.white,
+                                )),
+                            Text(
+                              '${getDistance(snapshot.data!).toStringAsFixed(2)}m',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return Container();
+                    },
                   ),
                 ),
               ),
             ),
+            */
           ],
         ),
         insertingLimit ? getMultiEventInsertingBanner() : Container(),
@@ -354,11 +246,6 @@ class _EventMapState extends State<EventMap> {
     );
   }
 
-  /*
-    String title = '';
-  EventType type = EventType.place;
-  MarkerModel marker = MarkerModel();
-   */
   showEventFormModal(LatLng latlng, bool isTemp) {
     String title = '';
     String description = '';

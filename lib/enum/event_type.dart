@@ -12,4 +12,15 @@ enum EventType {
         return '';
     }
   }
+
+  fromLabel(String label) {
+    switch (label) {
+      case 'Place':
+        return EventType.place;
+      case 'Temp':
+        return EventType.temp;
+      default:
+        return null;
+    }
+  }
 }

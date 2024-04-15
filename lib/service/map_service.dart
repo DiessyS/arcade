@@ -29,7 +29,6 @@ class MapService {
     double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
     double bearing = atan2(y, x);
 
-    // Convert radians to degrees
     return (_radiansToDegrees(bearing) + 360) % 360;
   }
 

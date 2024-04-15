@@ -1,5 +1,5 @@
 class Repository<T> {
-  List<T> _cache = [];
+  final List<T> _cache = [];
 
   List<T> getAll() {
     return _cache;

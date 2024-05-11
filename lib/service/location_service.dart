@@ -1,80 +1,73 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
-  late LocationSettings locationSettings;
-  late Stream<Position> positionStream;
+  bool _canBroadcastLocation = false;
+  bool _isBroadcastingLocation = false;
+  Stream<Position>? _broadcastLocation;
 
-  LocationPermission isPermissionGranted = LocationPermission.denied;
-
-  LocationService() {
-    positionStream = const Stream.empty();
-
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      locationSettings = _androidLocationSettings();
-    } else if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {
-      locationSettings = _iosLocationSettings();
-    } else {
-      locationSettings = _genericLocationSettings();
-    }
-  }
-
-  init() async {
-    var locationEnabled = await Geolocator.isLocationServiceEnabled();
-
-    if (!locationEnabled) {
-      await Geolocator.openLocationSettings();
-    }
-
-    isPermissionGranted = await Geolocator.checkPermission();
-
-    if (isPermissionGranted == LocationPermission.denied) {
-      await Geolocator.requestPermission();
-
-      isPermissionGranted = await Geolocator.checkPermission();
-    }
-  }
-
-  capture() async {
-    if (isPermissionGranted == LocationPermission.denied) {
-      throw Exception('Location permission denied');
-    }
-
-    if (positionStream != const Stream.empty()) {
+  Future init() async {
+    if (Platform.isWindows) {
       return;
     }
 
-    positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).asBroadcastStream();
+    await serviceEnabled();
+    await requestLocationPermission();
+    _canBroadcastLocation = true;
   }
 
-  dispose() {
-    positionStream = const Stream.empty();
+  Stream<Position>? getLocation() {
+    if (!_isBroadcastingLocation) {
+      startLocationBroadcast();
+    }
+    return _broadcastLocation;
   }
 
-  _androidLocationSettings() {
-    return AndroidSettings(
+  startLocationBroadcast() {
+    if (Platform.isWindows) {
+      return;
+    }
+
+    if (!_canBroadcastLocation) {
+      throw Exception("Location service is not initialized");
+    }
+
+    const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 1,
-      forceLocationManager: true,
-      intervalDuration: const Duration(seconds: 5),
     );
+
+    _broadcastLocation = Geolocator.getPositionStream(locationSettings: locationSettings).asBroadcastStream();
+    _isBroadcastingLocation = true;
   }
 
-  _iosLocationSettings() {
-    return AppleSettings(
-      accuracy: LocationAccuracy.bestForNavigation,
-      activityType: ActivityType.otherNavigation,
-      distanceFilter: 1,
-      pauseLocationUpdatesAutomatically: true,
-    );
+  stopLocationBroadcast() {
+    _broadcastLocation = null;
   }
 
-  _genericLocationSettings() {
-    return const LocationSettings(
-      accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 1,
-    );
+  Future<Position> determinePosition() async {
+    await serviceEnabled();
+    await requestLocationPermission();
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future serviceEnabled() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw Exception("Location services are disabled");
+    }
+  }
+
+  Future requestLocationPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        throw Exception("Location permissions are denied");
+      } else if (permission == LocationPermission.deniedForever) {
+        throw Exception("Location permissions are permanently denied, we cannot request permissions.");
+      }
+    }
   }
 }

@@ -11,4 +11,9 @@ class EventModel {
   asLatLng() {
     return marker.toLatLng();
   }
+
+  @override
+  String toString() {
+    return title;
+  }
 }

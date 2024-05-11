@@ -1,12 +1,27 @@
 import 'dart:math';
 
-import 'package:arcade/models/event_model.dart';
+import 'package:arcade/enum/multi_event_type.dart';
 import 'package:arcade/models/multi_event_model.dart';
+import 'package:arcade/service/models/multi_event_service.dart';
+import 'package:arcade/service_registers.dart';
+import 'package:latlong2/latlong.dart';
 
 class MapService {
-  isEventInsideLimit(EventModel event, MultiEventModel limit) {
+  late final LatLng initialLocation;
+
+  MapService() {
+    initialLocation = _getInitialLocation();
+  }
+
+  bool isLatLngInsideLimit(LatLng latLng) {
+    MultiEventModel limit = service<MultiEventService>().getByType(MultiEventType.limit);
+
+    if (limit.markers.isEmpty) {
+      return true;
+    }
+
     var polyPoints = limit.asLatLngList();
-    var x = event.asLatLng().latitude, y = event.asLatLng().longitude;
+    var x = latLng.latitude, y = latLng.longitude;
 
     var inside = false;
     for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
@@ -38,5 +53,9 @@ class MapService {
 
   double _radiansToDegrees(double radians) {
     return radians * 180 / pi;
+  }
+
+  LatLng _getInitialLocation() {
+    return const LatLng(-25.051366806523237, -50.13217808780914);
   }
 }

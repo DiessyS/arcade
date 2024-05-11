@@ -1,19 +1,22 @@
 import 'package:arcade/enum/event_type.dart';
 import 'package:arcade/models/event_model.dart';
+import 'package:arcade/view_model/compass_vm.dart';
+import 'package:arcade/view_model/places_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:provider/provider.dart';
 
 class Places extends StatelessWidget {
-  Places({super.key, required this.points, required this.tempPoints});
-
-  List<EventModel> points;
-  List<EventModel> tempPoints;
+  const Places({super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<EventModel> allPoints = [...points, ...tempPoints];
+    PlacesVM vm = Provider.of<PlacesVM>(context);
+    CompassVM compassVM = Provider.of<CompassVM>(context);
+
     return MarkerLayer(
-      markers: allPoints
+      markers: vm
+          .getPlaces()
           .map(
             (e) => Marker(
               width: 100.0,
@@ -32,12 +35,18 @@ class Places extends StatelessWidget {
                     ),
                     items: [
                       PopupMenuItem(
-                        child: const Text('Rename'),
+                        child: const Text('Renomear'),
                         onTap: () async {},
                       ),
                       PopupMenuItem(
-                        child: const Text('Delete'),
+                        child: const Text('Remover'),
                         onTap: () async {},
+                      ),
+                      PopupMenuItem(
+                        child: const Text('Ir para'),
+                        onTap: () {
+                          compassVM.startTracking(e);
+                        },
                       ),
                     ],
                   );

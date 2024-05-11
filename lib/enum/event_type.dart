@@ -13,6 +13,17 @@ enum EventType {
     }
   }
 
+  readableLabel() {
+    switch (this) {
+      case EventType.place:
+        return 'Local';
+      case EventType.temp:
+        return 'Local Temporário';
+      default:
+        return '';
+    }
+  }
+
   fromLabel(String label) {
     switch (label) {
       case 'Place':

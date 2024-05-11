@@ -41,11 +41,15 @@ dependencies:
   flutter_map_math: ^0.1.7
   latlong2: ^0.9.1
   flutter_map_cancellable_tile_provider: ^2.0.0
-  geolocator: ^11.0.0
   oktoast: ^3.4.0
   path_provider: ^2.0.11
+  provider: ^6.1.2
+  geolocator: ^11.0.0
+  animated_custom_dropdown: ^3.0.0
+  arcore_flutter_plugin: ^0.1.0
+  vector_math: ^2.1.4
 
-  anydrawer: ^1.0.6
+  # anydrawer: ^1.0.6
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +74,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

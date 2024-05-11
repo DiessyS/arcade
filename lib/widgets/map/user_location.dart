@@ -1,22 +1,18 @@
-import 'package:arcade/service/location_service.dart';
-import 'package:arcade/service_registers.dart';
+import 'package:arcade/view_model/user_location_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
 
 class UserLocation extends StatelessWidget {
-  UserLocation({super.key});
-
-  Stream<Position> location = const Stream.empty();
+  const UserLocation({super.key});
 
   @override
   Widget build(BuildContext context) {
-    service<LocationService>().capture();
-    location = service<LocationService>().positionStream;
+    UserLocationVM vm = Provider.of<UserLocationVM>(context);
 
     return StreamBuilder<Position>(
-      stream: location,
+      stream: vm.getLocationStream(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return MarkerLayer(
@@ -24,7 +20,7 @@ class UserLocation extends StatelessWidget {
               Marker(
                 width: 100.0,
                 height: 80.0,
-                point: positionToLatLng(snapshot.data!),
+                point: vm.locationDataToLatLng(snapshot.data!),
                 child: const Column(
                   children: [
                     Text(
@@ -44,17 +40,9 @@ class UserLocation extends StatelessWidget {
             ],
           );
         } else {
-          return const Placeholder();
+          return const Text('Localização indisponivel');
         }
       },
     );
-  }
-
-  positionToLatLng(Position position) {
-    return LatLng(position.latitude, position.longitude);
-  }
-
-  getUserLocation() {
-    return LatLng(-25.051366806523237, -50.13217808780914);
   }
 }

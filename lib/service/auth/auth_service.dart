@@ -1,8 +1,9 @@
-import 'package:arcade_repository/models/user.dart';
+import 'package:arcade/models/user_model.dart';
+import 'package:arcade/service/auth/jwt.dart';
 
 class AuthService {
-  String? jwt;
-  User? user;
+  //JWT? jwt;
+  UserModel? user;
 
   isAuthenticated() {
     return user != null;

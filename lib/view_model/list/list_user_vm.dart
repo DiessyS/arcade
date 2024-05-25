@@ -1,3 +1,4 @@
+import 'package:arcade/models/user.dart';
 import 'package:arcade/models/user_model.dart';
 import 'package:arcade/service/models/user_service.dart';
 import 'package:arcade/service_registers.dart';
@@ -19,8 +20,8 @@ class ListUsersVM extends ChangeNotifier {
     }
   }
 
-  List<UserModel> getUsers() {
-    List<UserModel> user = service<UserService>().getAll();
+  Future<List<User>> getUsers() async {
+    List<User> user = await service<UserService>().getAll();
     return user;
   }
 }

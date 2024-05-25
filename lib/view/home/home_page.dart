@@ -1,6 +1,6 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:arcade/enum/home_page_modes.dart';
-import 'package:arcade/models/event_model.dart';
+import 'package:arcade/models/event.dart';
 import 'package:arcade/view/home/home/event_camera.dart';
 import 'package:arcade/view/home/home/event_map.dart';
 import 'package:arcade/view_model/compass_vm.dart';
@@ -71,7 +71,24 @@ class HomePage extends StatelessWidget {
                       SizedBox.fromSize(
                         size: const Size(16, 0),
                       ),
-                      getPlaceSearch(placesVM.getNonTempPlaces(), compassVM.startTracking),
+                      FutureBuilder(
+                        future: placesVM.getNonTempPlaces(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.connectionState == ConnectionState.done) {
+                            if (snapshot.data == null) {
+                              return const Center(
+                                child: Text("Nenhum lugar encontrado"),
+                              );
+                            }
+                            return getPlaceSearch(snapshot.data, compassVM.startTracking);
+                          }
+                          return const SizedBox(width: 1, height: 1);
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -83,8 +100,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  getPlaceSearch(List<EventModel> places, startTracking) {
-    if (places.isEmpty) {
+  getPlaceSearch(List<Event>? places, startTracking) {
+    if (places == null || places.isEmpty) {
       return const SizedBox(width: 1, height: 1);
     } else {
       return Expanded(
@@ -93,7 +110,7 @@ class HomePage extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
-          child: CustomDropdown<EventModel>.search(
+          child: CustomDropdown<Event>.search(
             decoration: const CustomDropdownDecoration(
               hintStyle: TextStyle(
                 color: Colors.black,
@@ -111,7 +128,7 @@ class HomePage extends StatelessWidget {
             hintText: 'Para onde você quer ir?',
             searchHintText: 'Pesquisar',
             items: places,
-            onChanged: (EventModel? value) {
+            onChanged: (Event? value) {
               if (value != null) {
                 startTracking(value);
               }

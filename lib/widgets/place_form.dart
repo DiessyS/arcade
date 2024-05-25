@@ -1,4 +1,5 @@
 import 'package:arcade/enum/event_type.dart';
+import 'package:arcade/models/event.dart';
 import 'package:arcade/models/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
@@ -6,7 +7,7 @@ import 'package:latlong2/latlong.dart';
 class PlaceForm extends StatelessWidget {
   PlaceForm({super.key, required this.latlng, required this.isTemp, required this.callback});
 
-  final void Function(EventModel) callback;
+  final void Function(Event) callback;
 
   LatLng latlng;
   bool isTemp;
@@ -69,11 +70,11 @@ class PlaceForm extends StatelessWidget {
                   backgroundColor: MaterialStateProperty.all(Colors.black54),
                 ),
                 onPressed: () {
-                  EventModel place = EventModel();
-                  place.title = title;
+                  Event place = Event();
+                  place.name = title;
                   place.description = description;
                   place.marker.fromLatLng(latlng);
-                  place.type = isTemp ? EventType.temp : EventType.place;
+                  place.eventType = isTemp ? EventType.temp : EventType.place;
 
                   callback(place);
 

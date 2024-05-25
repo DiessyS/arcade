@@ -1,3 +1,4 @@
+/*
 import 'package:arcade/enum/event_type.dart';
 import 'package:arcade/models/marker_model.dart';
 
@@ -17,3 +18,5 @@ class EventModel {
     return title;
   }
 }
+
+ */

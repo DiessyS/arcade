@@ -2,36 +2,26 @@ enum EventType {
   place,
   temp;
 
-  label() {
+  @override
+  toString() {
     switch (this) {
       case EventType.place:
-        return 'Place';
+        return 'place';
       case EventType.temp:
-        return 'Temp';
+        return 'temp';
       default:
-        return '';
+        return 'place';
     }
   }
 
-  readableLabel() {
-    switch (this) {
-      case EventType.place:
-        return 'Local';
-      case EventType.temp:
-        return 'Local Temporário';
-      default:
-        return '';
-    }
-  }
-
-  fromLabel(String label) {
+  static EventType fromString(String label) {
     switch (label) {
-      case 'Place':
+      case 'place':
         return EventType.place;
-      case 'Temp':
+      case 'temp':
         return EventType.temp;
       default:
-        return null;
+        return EventType.place;
     }
   }
 }

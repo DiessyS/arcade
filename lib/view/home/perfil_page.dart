@@ -1,23 +1,31 @@
+import 'package:arcade/models/user.dart';
+import 'package:arcade/view_model/login_vm.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PerfilPage extends StatelessWidget {
   const PerfilPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    LoginVM loginVM = Provider.of<LoginVM>(context);
+
     return SafeArea(
       child: Container(
         width: double.infinity,
         color: const Color(0xFF070F2B),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: loginForm(context),
+          child: loginVM.isAuthenticated() ? perfil(loginVM) : loginForm(context, loginVM),
         ),
       ),
     );
   }
 
-  Widget loginForm(context) {
+  Widget loginForm(context, LoginVM loginVM) {
+    TextEditingController raController = TextEditingController();
+    TextEditingController senhaController = TextEditingController();
+
     return Container(
       height: 320,
       decoration: BoxDecoration(
@@ -27,11 +35,12 @@ class PerfilPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: ListView(
+          shrinkWrap: true,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Login',
                   style: TextStyle(
                     color: Colors.black,
@@ -49,6 +58,7 @@ class PerfilPage extends StatelessWidget {
             ),
             SizedBox.fromSize(size: const Size(0, 32)),
             TextField(
+              controller: raController,
               decoration: InputDecoration(
                 labelText: 'RA',
                 border: OutlineInputBorder(
@@ -58,6 +68,7 @@ class PerfilPage extends StatelessWidget {
             ),
             SizedBox.fromSize(size: const Size(0, 16)),
             TextField(
+              controller: senhaController,
               decoration: InputDecoration(
                 labelText: 'Senha',
                 border: OutlineInputBorder(
@@ -67,8 +78,9 @@ class PerfilPage extends StatelessWidget {
             ),
             SizedBox.fromSize(size: const Size(0, 16)),
             FilledButton(
-              onPressed: () {},
-              child: const Text('Entrar'),
+              onPressed: () {
+                loginVM.login(raController.text, senhaController.text, context);
+              },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.black),
                 fixedSize: MaterialStateProperty.all(const Size(double.infinity, 48)),
@@ -78,6 +90,7 @@ class PerfilPage extends StatelessWidget {
                   ),
                 ),
               ),
+              child: const Text('Entrar'),
             ),
           ],
         ),
@@ -85,7 +98,8 @@ class PerfilPage extends StatelessWidget {
     );
   }
 
-  Widget perfil() {
+  Widget perfil(LoginVM loginVM) {
+    User user = loginVM.getUser();
     return Container(
       height: 140,
       decoration: BoxDecoration(
@@ -104,9 +118,9 @@ class PerfilPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
-                        "João da Silva",
+                        user.name,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           color: Colors.black,
@@ -114,7 +128,7 @@ class PerfilPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "2098318 - Aluno",
+                        "${user.identifier} - ${user.manager ? 'Gerenciador' : 'Usuário'}",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           color: Colors.black,
@@ -131,7 +145,9 @@ class PerfilPage extends StatelessWidget {
             child: Align(
               alignment: Alignment.center,
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  loginVM.logout();
+                },
                 style: ButtonStyle(
                   alignment: Alignment.center,
                   fixedSize: MaterialStateProperty.all(

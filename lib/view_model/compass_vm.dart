@@ -1,3 +1,4 @@
+import 'package:arcade/models/event.dart';
 import 'package:arcade/models/event_model.dart';
 import 'package:arcade/service/location_service.dart';
 import 'package:arcade/service/map_service.dart';
@@ -16,11 +17,11 @@ class CompassVM extends ChangeNotifier {
   int timerIntervalDisablingTracking = 5000;
   bool isTrackingFinished = false;
 
-  startTracking(EventModel target) {
+  startTracking(Event target) {
     isTrackingFinished = false;
     location = service<LocationService>().getLocation();
     this.target = target.asLatLng();
-    targetName = target.title;
+    targetName = target.name;
     notifyListeners();
   }
 

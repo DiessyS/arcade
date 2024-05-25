@@ -8,6 +8,7 @@ bootstrap() async {
 }
 
 addTestUser() {
+  /*
   UserModel user = UserModel();
   user.id = '1';
   user.ra = '123456789';
@@ -15,4 +16,6 @@ addTestUser() {
   user.type = UserType.user;
 
   service<UserService>().add(user);
+
+   */
 }

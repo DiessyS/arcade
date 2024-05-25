@@ -1,4 +1,5 @@
 import 'package:arcade/enum/event_type.dart';
+import 'package:arcade/models/event.dart';
 import 'package:arcade/models/event_model.dart';
 import 'package:arcade/service/location_service.dart';
 import 'package:arcade/service/map_service.dart';
@@ -24,7 +25,8 @@ class PlacesVM extends ChangeNotifier {
           latlng: latlng,
           isTemp: isTemp,
           callback: (place) => {
-            service<EventService>().add(place),
+            throw Exception('Not implemented'),
+            //service<EventService>().add(place),
             notifyListeners(),
           },
         );
@@ -41,17 +43,17 @@ class PlacesVM extends ChangeNotifier {
     return service<MapService>().isLatLngInsideLimit(latlng);
   }
 
-  List<EventModel> getPlaces() {
-    List<EventModel> places = service<EventService>().getAll();
+  Future<List<Event>> getPlaces() async {
+    List<Event> places = await service<EventService>().getAll();
     return places;
   }
 
-  List<EventModel> getNonTempPlaces() {
-    List<EventModel> places = service<EventService>().getAll();
-    return places.where((element) => element.type != EventType.temp).toList();
+  Future<List<Event>> getNonTempPlaces() async {
+    List<Event> places = await service<EventService>().getAll();
+    return places.where((element) => element.eventType != EventType.temp).toList();
   }
 
-  bool noPlaces() {
-    return service<EventService>().getAll().isEmpty;
+  Future<bool> noPlaces() async {
+    return (await service<EventService>().getAll()).isEmpty;
   }
 }

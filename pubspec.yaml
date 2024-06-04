@@ -46,9 +46,10 @@ dependencies:
   provider: ^6.1.2
   geolocator: ^11.0.0
   animated_custom_dropdown: ^3.0.0
-  arcore_flutter_plugin: ^0.1.0
+  # arcore_flutter_plugin: ^0.1.0
   vector_math: ^2.1.4
   http: ^1.2.1
+  widget_mask: ^1.0.0+0
 
   # anydrawer: ^1.0.6
 

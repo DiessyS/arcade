@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
@@ -9,9 +10,6 @@ class LocationService {
   Stream<Position>? _broadcastLocation;
 
   Future init() async {
-    if (Platform.isWindows) {
-      return;
-    }
 
     await serviceEnabled();
     await requestLocationPermission();
@@ -26,9 +24,6 @@ class LocationService {
   }
 
   startLocationBroadcast() {
-    if (Platform.isWindows) {
-      return;
-    }
 
     if (!_canBroadcastLocation) {
       throw Exception("Location service is not initialized");

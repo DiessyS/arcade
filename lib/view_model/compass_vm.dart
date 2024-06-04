@@ -1,5 +1,4 @@
 import 'package:arcade/models/event.dart';
-import 'package:arcade/models/event_model.dart';
 import 'package:arcade/service/location_service.dart';
 import 'package:arcade/service/map_service.dart';
 import 'package:arcade/service_registers.dart';

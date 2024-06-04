@@ -20,4 +20,31 @@ class UserService {
       throw Exception(response.body);
     }
   }
+
+  Future update(int id, bool banned) async {
+    Response response = await service<HttpService>().put(
+      '/user/$id',
+      {'banned': banned.toString()},
+      authenticated: true,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(response.body);
+    }
+
+    return response;
+  }
+
+  Future delete(int id) async {
+    Response response = await service<HttpService>().delete(
+      '/user/$id',
+      authenticated: true,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(response.body);
+    }
+
+    return response;
+  }
 }

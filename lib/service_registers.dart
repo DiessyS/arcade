@@ -4,8 +4,8 @@ import 'package:arcade/service/http/http_service.dart';
 import 'package:arcade/service/location_service.dart';
 import 'package:arcade/service/map_service.dart';
 import 'package:arcade/service/models/event_service.dart';
-import 'package:arcade/service/models/multi_event_service.dart';
 import 'package:arcade/service/models/user_service.dart';
+import 'package:arcade/service/server_service.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt service = GetIt.instance;
@@ -18,8 +18,9 @@ void serviceRegister() {
   service.registerLazySingleton<CompassService>(() => CompassService());
 
   service.registerLazySingleton<EventService>(() => EventService());
-  service.registerLazySingleton<MultiEventService>(() => MultiEventService());
   service.registerLazySingleton<UserService>(() => UserService());
 
   service.registerLazySingleton<AuthService>(() => AuthService());
+
+  service.registerLazySingleton<ServerService>(() => ServerService());
 }

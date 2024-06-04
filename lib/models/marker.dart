@@ -9,7 +9,7 @@ class Marker {
 
   Marker();
 
-  fromLatLng(LatLng latLng) {
+  Marker.fromLatLng(LatLng latLng) {
     latitude = latLng.latitude;
     longitude = latLng.longitude;
   }

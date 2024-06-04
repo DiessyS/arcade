@@ -1,5 +1,6 @@
 import 'package:arcade/view/home/home_page.dart';
 import 'package:arcade/view/home/list_page.dart';
+import 'package:arcade/view/offline_page.dart';
 import 'package:arcade/widgets/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,11 @@ class PathRouter {
         return _builder(
           const ListPage(),
         );
+      case '/offline':
+        return _builder(
+          const OfflinePage(),
+          withBottomNavigation: false,
+        );
       default:
         return _builder(
           const HomePage(),
@@ -25,12 +31,12 @@ class PathRouter {
     }
   }
 
-  PageRouteBuilder _builder(Widget widget) {
+  PageRouteBuilder _builder(Widget widget, {bool withBottomNavigation = true}) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => Material(
         child: Scaffold(
           body: widget,
-          bottomNavigationBar: BottomNavigation(),
+          bottomNavigationBar: withBottomNavigation ? BottomNavigation() : null,
         ),
       ),
     );

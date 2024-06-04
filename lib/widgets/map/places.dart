@@ -1,8 +1,8 @@
 import 'package:arcade/enum/event_type.dart';
-import 'package:arcade/models/event.dart';
-import 'package:arcade/models/event_model.dart';
 import 'package:arcade/view_model/compass_vm.dart';
-import 'package:arcade/view_model/places_vm.dart';
+import 'package:arcade/view_model/auth_vm.dart';
+import 'package:arcade/view_model/map/event_vm.dart';
+import 'package:arcade/widgets/event_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:provider/provider.dart';
@@ -12,11 +12,12 @@ class Places extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PlacesVM vm = Provider.of<PlacesVM>(context);
+    AuthVM loginVM = Provider.of<AuthVM>(context);
     CompassVM compassVM = Provider.of<CompassVM>(context);
+    EventVM eventVM = Provider.of<EventVM>(context);
 
     return FutureBuilder(
-      future: vm.getPlaces(),
+      future: eventVM.getPlaceAndTempEvents(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -37,9 +38,16 @@ class Places extends StatelessWidget {
                     point: e.marker.toLatLng(),
                     child: GestureDetector(
                       onTapDown: (details) {
+                        if (!loginVM.isAuthenticated()) {
+                          return;
+                        }
                         final offset = details.globalPosition;
                         showMenu(
                           context: context,
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           position: RelativeRect.fromLTRB(
                             offset.dx,
                             offset.dy,
@@ -48,17 +56,44 @@ class Places extends StatelessWidget {
                           ),
                           items: [
                             PopupMenuItem(
-                              child: const Text('Renomear'),
-                              onTap: () async {},
+                              enabled: loginVM.isUserManager(),
+                              child: const Text(
+                                'Remover',
+                                style: TextStyle(fontWeight: FontWeight.w400),
+                              ),
+                              onTap: () async {
+                                eventVM.deleteEvent(e.id);
+                              },
                             ),
                             PopupMenuItem(
-                              child: const Text('Remover'),
-                              onTap: () async {},
-                            ),
-                            PopupMenuItem(
-                              child: const Text('Ir para'),
+                              child: const Text(
+                                'Ir para',
+                                style: TextStyle(fontWeight: FontWeight.w400),
+                              ),
                               onTap: () {
                                 compassVM.startTracking(e);
+                              },
+                            ),
+                            PopupMenuItem(
+                              enabled: loginVM.isUserManager(),
+                              child: const Text(
+                                'Informações',
+                                style: TextStyle(fontWeight: FontWeight.w400),
+                              ),
+                              onTap: () async {
+                                showModalBottomSheet(
+                                  context: context,
+                                  useSafeArea: true,
+                                  isScrollControlled: true,
+                                  builder: (context) => Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                                    ),
+                                    child: EventInfo(
+                                      event: e,
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                           ],
@@ -69,13 +104,13 @@ class Places extends StatelessWidget {
                           Text(
                             e.name,
                             style: TextStyle(
-                              color: _getColorByType(e),
+                              color: e.eventType.color,
                             ),
                           ),
                           Icon(
                             Icons.place,
                             size: 25.0,
-                            color: _getColorByType(e),
+                            color: e.eventType.color,
                           ),
                         ],
                       ),
@@ -90,14 +125,5 @@ class Places extends StatelessWidget {
         );
       },
     );
-  }
-
-  _getColorByType(Event e) {
-    switch (e.eventType) {
-      case EventType.place:
-        return Colors.green;
-      case EventType.temp:
-        return Colors.blue;
-    }
   }
 }

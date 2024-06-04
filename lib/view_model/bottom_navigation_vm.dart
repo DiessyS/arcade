@@ -16,12 +16,10 @@ class BottomNavigationVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  // To trigger button hide the index must be 2 coming from 0 or 1
   canHideButton() {
     return lastNavigationIndex == 1 && navigationIndex == 0 || navigationIndex == 2;
   }
 
-  // To trigger button show the index must be 0 or 1 coming from 2
   canShowButton() {
     return (lastNavigationIndex == 2 || lastNavigationIndex == 0) && navigationIndex == 1;
   }

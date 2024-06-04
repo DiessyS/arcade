@@ -1,10 +1,11 @@
+import 'package:arcade/theme/theme_tokens.dart';
 import 'package:arcade/view/home/perfil_page.dart';
 import 'package:arcade/view_model/bottom_navigation_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavigation extends StatefulWidget {
-  BottomNavigation({super.key});
+  const BottomNavigation({super.key});
 
   @override
   State<BottomNavigation> createState() => _BottomNavigationState();
@@ -46,7 +47,7 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
     }
 
     return Container(
-      color: const Color(0xFF070F2B),
+      color: ThemeTokens.backgroundColor,
       height: 104,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -70,13 +71,16 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                     Icons.person_outline,
                     vm,
                     callback: () {
-                      //Navigator.of(context).pushNamed('/perfil_page');
                       showModalBottomSheet(
                         context: context,
-                        constraints: BoxConstraints(
-                          maxHeight: MediaQuery.of(context).size.height * 0.50,
+                        useSafeArea: true,
+                        isScrollControlled: true,
+                        builder: (context) => Padding(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          child: const PerfilPage(),
                         ),
-                        builder: (context) => PerfilPage(),
                       );
                     },
                   ),
@@ -124,7 +128,7 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                       width: 112,
                       height: 96,
                       decoration: const BoxDecoration(
-                        color: Color(0xFF070F2B),
+                        color: ThemeTokens.backgroundColor,
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(16),
                         ),
@@ -161,87 +165,8 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
     );
   }
 
-  /*
-  Container(
-                          height: 200,
-                          width: double.infinity,
-                          color: Colors.white,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: const [
-                                          Text(
-                                            "Nome do Aluno",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 22,
-                                            ),
-                                          ),
-                                          Text(
-                                            "2098318 - Aluno",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: 120,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    style: ButtonStyle(
-                                      alignment: Alignment.center,
-                                      fixedSize: MaterialStateProperty.all(
-                                        const Size(120, 120),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(16),
-                                        ),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.logout,
-                                          color: Colors.black,
-                                        ),
-                                        SizedBox.fromSize(size: const Size(16, 0)),
-                                        const Text(
-                                          'Sair',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-   */
-
-  _buttonOnBottomNavigation(int index, IconData icon, BottomNavigationVM vm, {required VoidCallback? callback}) {
+  _buttonOnBottomNavigation(int index, IconData icon, BottomNavigationVM vm,
+      {required VoidCallback? callback}) {
     return Expanded(
       child: TextButton(
         onPressed: () async {

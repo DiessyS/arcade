@@ -1,10 +1,12 @@
 import 'dart:math';
 
-import 'package:arcade/enum/multi_event_type.dart';
-import 'package:arcade/models/multi_event_model.dart';
-import 'package:arcade/service/models/multi_event_service.dart';
+import 'package:arcade/enum/event_type.dart';
 import 'package:arcade/service_registers.dart';
 import 'package:latlong2/latlong.dart';
+
+import '../models/event.dart';
+import 'models/event_service.dart';
+
 
 class MapService {
   late final LatLng initialLocation;
@@ -13,14 +15,14 @@ class MapService {
     initialLocation = _getInitialLocation();
   }
 
-  bool isLatLngInsideLimit(LatLng latLng) {
-    MultiEventModel limit = service<MultiEventService>().getByType(MultiEventType.limit);
+  Future<bool> isLatLngInsideLimit(LatLng latLng) async {
+    List<Event> limit = await service<EventService>().getByEventType(EventType.limit);
 
-    if (limit.markers.isEmpty) {
+    if (limit.isEmpty) {
       return true;
     }
 
-    var polyPoints = limit.asLatLngList();
+    var polyPoints = limit.map((e) => LatLng(e.marker.latitude, e.marker.longitude)).toList();
     var x = latLng.latitude, y = latLng.longitude;
 
     var inside = false;

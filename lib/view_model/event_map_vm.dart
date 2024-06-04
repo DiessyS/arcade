@@ -7,4 +7,8 @@ class EventMapVM extends ChangeNotifier {
   LatLng getInitialLocation() {
     return service<MapService>().initialLocation;
   }
+
+  refresh() {
+    notifyListeners();
+  }
 }

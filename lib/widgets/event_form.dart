@@ -108,13 +108,17 @@ class _EventFormState extends State<EventForm> {
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
-
-                  await eventVM.addEvent(
-                    titleController.text,
-                    descriptionController.text,
-                    widget.isTemp ? EventType.temp : EventType.place,
-                    Marker.fromLatLng(widget.latlng),
-                  );
+                  try {
+                    await eventVM.addEvent(
+                      titleController.text,
+                      descriptionController.text,
+                      widget.isTemp ? EventType.temp : EventType.place,
+                      Marker.fromLatLng(widget.latlng),
+                    );
+                  } catch (e) {
+                    showToast(e.toString(), position: ToastPosition.bottom);
+                    return;
+                  }
 
                   widget.onEventCreated();
                 },

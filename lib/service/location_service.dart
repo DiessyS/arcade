@@ -10,7 +10,6 @@ class LocationService {
   Stream<Position>? _broadcastLocation;
 
   Future init() async {
-
     await serviceEnabled();
     await requestLocationPermission();
     _canBroadcastLocation = true;
@@ -24,16 +23,19 @@ class LocationService {
   }
 
   startLocationBroadcast() {
-
     if (!_canBroadcastLocation) {
       throw Exception("Location service is not initialized");
     }
 
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
+      distanceFilter: 0,
     );
 
-    _broadcastLocation = Geolocator.getPositionStream(locationSettings: locationSettings).asBroadcastStream();
+    _broadcastLocation = Geolocator.getPositionStream(
+      locationSettings: locationSettings,
+    ).asBroadcastStream();
+
     _isBroadcastingLocation = true;
   }
 
@@ -61,7 +63,8 @@ class LocationService {
       if (permission == LocationPermission.denied) {
         throw Exception("Location permissions are denied");
       } else if (permission == LocationPermission.deniedForever) {
-        throw Exception("Location permissions are permanently denied, we cannot request permissions.");
+        throw Exception(
+            "Location permissions are permanently denied, we cannot request permissions.");
       }
     }
   }

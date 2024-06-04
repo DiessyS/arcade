@@ -40,7 +40,25 @@ class UserLocation extends StatelessWidget {
             ],
           );
         } else {
-          return const Text('Localização indisponivel');
+          return Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Colors.black54,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(16.0),
+              ),
+            ),
+            child: const Text(
+              "Obtentendo localização...",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          );
         }
       },
     );

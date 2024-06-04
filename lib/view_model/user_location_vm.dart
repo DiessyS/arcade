@@ -9,6 +9,10 @@ class UserLocationVM extends ChangeNotifier {
     return service<LocationService>().getLocation();
   }
 
+  Future<LatLng> getUserLocation() async {
+    return locationDataToLatLng(await service<LocationService>().determinePosition());
+  }
+
   LatLng locationDataToLatLng(Position locationData) {
     return LatLng(locationData.latitude, locationData.longitude);
   }

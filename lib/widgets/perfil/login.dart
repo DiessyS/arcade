@@ -69,6 +69,7 @@ class Login extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
+                  obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, insira sua senha';

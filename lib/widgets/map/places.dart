@@ -1,4 +1,3 @@
-import 'package:arcade/enum/event_type.dart';
 import 'package:arcade/view_model/compass_vm.dart';
 import 'package:arcade/view_model/auth_vm.dart';
 import 'package:arcade/view_model/map/event_vm.dart';

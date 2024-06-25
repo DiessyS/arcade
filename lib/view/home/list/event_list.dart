@@ -37,7 +37,7 @@ class EventList extends StatelessWidget {
               } else if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.data == null) {
                   return const Center(
-                    child: Text("Nenhum evento encontrado"),
+                    child: SizedBox(),
                   );
                 }
                 return ListView(

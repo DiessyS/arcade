@@ -1,6 +1,8 @@
+import 'package:arcade/enum/home_page_modes.dart';
 import 'package:arcade/theme/theme_tokens.dart';
 import 'package:arcade/view/home/perfil_page.dart';
 import 'package:arcade/view_model/bottom_navigation_vm.dart';
+import 'package:arcade/view_model/home_page_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +30,7 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
   @override
   Widget build(BuildContext context) {
     BottomNavigationVM vm = Provider.of<BottomNavigationVM>(context);
+    HomePageVM homePageVM = Provider.of<HomePageVM>(context);
 
     _controller = AnimationController(
       vsync: this,
@@ -72,10 +75,17 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                     vm,
                     callback: () {
                       showModalBottomSheet(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                        ),
+                        backgroundColor: Colors.white,
                         context: context,
                         useSafeArea: true,
                         isScrollControlled: true,
-                        builder: (context) => Padding(
+                        builder: (context) => Container(
                           padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom,
                           ),
@@ -136,7 +146,9 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 12, left: 12, right: 12),
                         child: FilledButton(
-                          onPressed: viewChangeClick,
+                          onPressed: () {
+                            homePageVM.changeModeTo(HomePageModes.cameraARCore);
+                          },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Colors.white),
                             overlayColor: MaterialStateProperty.all(Colors.black.withOpacity(0.1)),
@@ -148,7 +160,7 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                               ),
                             ),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.sync_alt_outlined,
                             color: Colors.black,
                           ),
@@ -165,8 +177,12 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
     );
   }
 
-  _buttonOnBottomNavigation(int index, IconData icon, BottomNavigationVM vm,
-      {required VoidCallback? callback}) {
+  _buttonOnBottomNavigation(
+    int index,
+    IconData icon,
+    BottomNavigationVM vm, {
+    required VoidCallback? callback,
+  }) {
     return Expanded(
       child: TextButton(
         onPressed: () async {
@@ -184,7 +200,10 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
             ),
           ),
         ),
-        child: Icon(icon, color: Colors.black),
+        child: Icon(
+          icon,
+          color: Colors.black,
+        ),
       ),
     );
   }

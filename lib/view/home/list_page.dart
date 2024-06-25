@@ -53,11 +53,11 @@ class ListPage extends StatelessWidget {
                 body: TabBarView(
                   children: isManager
                       ? <Widget>[
-                          UserList(),
-                          EventList(),
+                          const UserList(),
+                          const EventList(),
                         ]
                       : <Widget>[
-                          EventList(),
+                          const EventList(),
                         ],
                 ),
               ),

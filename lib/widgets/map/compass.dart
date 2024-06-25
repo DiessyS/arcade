@@ -1,3 +1,4 @@
+import 'package:arcade/theme/theme_tokens.dart';
 import 'package:arcade/view_model/compass_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,7 +39,7 @@ class Compass extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: const Color(0xFF070F2B).withOpacity(1),
+          color: ThemeTokens.backgroundColor,
         ),
         height: 96,
         child: widget,
@@ -47,38 +48,54 @@ class Compass extends StatelessWidget {
   }
 
   Widget _compass(Position position, double distance, CompassVM vm) {
-    return Row(
+    return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: RotationTransition(
-            turns: AlwaysStoppedAnimation(vm.getDirection(position)),
-            child: const Icon(
-              Icons.arrow_upward,
-              size: 64,
+        Container(
+          alignment: Alignment.topRight,
+          child: IconButton(
+            onPressed: () {
+              vm.stopTracking();
+            },
+            icon: const Icon(
+              Icons.close,
               color: Colors.white,
             ),
           ),
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Row(
           children: [
-            Text(
-              'Indo até ${vm.targetName}',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: RotationTransition(
+                turns: AlwaysStoppedAnimation(vm.getDirection(position)),
+                child: const Icon(
+                  Icons.arrow_upward,
+                  size: 48,
+                  color: Colors.white,
+                ),
               ),
             ),
-            Text(
-              '${distance.toStringAsFixed(2)} metros',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Indo até ${vm.targetName}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '${distance.toStringAsFixed(2)} metros',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

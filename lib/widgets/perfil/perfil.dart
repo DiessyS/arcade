@@ -21,37 +21,35 @@ class Perfil extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Container(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user.name,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24,
-                        ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user.name,
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
                       ),
-                      Text(
-                        "${user.identifier} - ${user.manager ? 'Gerenciador' : 'Usuário'}",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
+                    ),
+                    Text(
+                      "${user.identifier} - ${user.manager ? 'Gerenciador' : 'Usuário'}",
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        color: Colors.black,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: 120,
             child: Align(
               alignment: Alignment.center,
@@ -72,7 +70,7 @@ class Perfil extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.logout,
                       color: Colors.black,
                     ),

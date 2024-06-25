@@ -23,7 +23,7 @@ class Event {
 
   @override
   String toString() {
-    return 'name: $name';
+    return name;
   }
 
   toJson() {

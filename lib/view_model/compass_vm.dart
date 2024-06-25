@@ -28,12 +28,15 @@ class CompassVM extends ChangeNotifier {
     if (!isTracking()) {
       return;
     }
+
     double bearing = service<MapService>().calculateBearing(
+      location.heading,
       location.latitude,
       location.longitude,
       target!.latitude,
       target!.longitude,
     );
+
     return bearing / 360;
   }
 

@@ -9,8 +9,12 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 class EventForm extends StatefulWidget {
-  const EventForm(
-      {super.key, required this.latlng, required this.isTemp, required this.onEventCreated});
+  const EventForm({
+    super.key,
+    required this.latlng,
+    required this.isTemp,
+    required this.onEventCreated,
+  });
 
   final LatLng latlng;
   final bool isTemp;
@@ -58,7 +62,7 @@ class _EventFormState extends State<EventForm> {
                 children: [
                   Text(
                     'Criar lugar ${widget.isTemp ? "temporario" : ""}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 24,
                     ),

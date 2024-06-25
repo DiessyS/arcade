@@ -1,6 +1,5 @@
 import 'package:arcade/enum/event_type.dart';
 import 'package:arcade/models/event.dart';
-import 'package:arcade/models/user.dart';
 import 'package:arcade/theme/theme_tokens.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ class EventInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: ThemeTokens.backgroundColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
@@ -132,7 +131,7 @@ class EventInfo extends StatelessWidget {
               ),
             ),
             Text(
-              event.createdBy.identifier,
+              "Id: ${event.createdBy.id} - ${event.createdBy.identifier}",
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 18,

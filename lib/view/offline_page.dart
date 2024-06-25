@@ -1,3 +1,4 @@
+import 'package:arcade/theme/theme_tokens.dart';
 import 'package:arcade/view_model/server_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,7 @@ class OfflinePage extends StatelessWidget {
     ServerVM serverVM = Provider.of<ServerVM>(context);
 
     return Container(
-      color: const Color(0xFF070F2B),
+      color: ThemeTokens.backgroundColor,
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

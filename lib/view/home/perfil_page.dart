@@ -1,4 +1,4 @@
-import 'package:arcade/models/user.dart';
+import 'package:arcade/theme/theme_tokens.dart';
 import 'package:arcade/view_model/auth_vm.dart';
 import 'package:arcade/widgets/perfil/login.dart';
 import 'package:arcade/widgets/perfil/perfil.dart';
@@ -13,11 +13,15 @@ class PerfilPage extends StatelessWidget {
     AuthVM loginVM = Provider.of<AuthVM>(context);
 
     return SafeArea(
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
-        color: const Color(0xFF070F2B),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.only(
+            top: 16,
+            left: 16,
+            right: 16,
+            bottom: 16,
+          ),
           child: loginVM.isAuthenticated() ? const Perfil() : Login(),
         ),
       ),

@@ -25,7 +25,7 @@ class Places extends StatelessWidget {
         } else if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data == null) {
             return const Center(
-              child: Text("Nenhum lugar encontrado"),
+              child: SizedBox(),
             );
           }
           return MarkerLayer(

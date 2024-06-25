@@ -3,6 +3,7 @@ import 'package:arcade/service/location_service.dart';
 import 'package:arcade/service/server_service.dart';
 import 'package:arcade/service_registers.dart' as register;
 import 'package:arcade/service_registers.dart';
+import 'package:arcade/theme/theme_tokens.dart';
 import 'package:arcade/view_model/bottom_navigation_vm.dart';
 import 'package:arcade/view_model/compass_vm.dart';
 import 'package:arcade/view_model/event_map_vm.dart';
@@ -58,7 +59,6 @@ class Main extends StatelessWidget {
       child: MaterialApp(
         title: 'ARcade',
         themeMode: ThemeMode.dark,
-        color: const Color(0xFF070F2B),
         onGenerateRoute: PathRouter().generateRoute,
         initialRoute: serverAvailable ? '/main_page' : '/offline',
       ),

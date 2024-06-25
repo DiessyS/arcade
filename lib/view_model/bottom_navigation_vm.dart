@@ -1,3 +1,4 @@
+import 'package:arcade/theme/theme_tokens.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigationVM extends ChangeNotifier {

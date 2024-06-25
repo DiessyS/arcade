@@ -1,4 +1,4 @@
-/*import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vector_math/vector_math_64.dart' as vector64;
@@ -25,7 +25,7 @@ class EventCamera extends StatelessWidget {
 
     final material = ArCoreMaterial(color: Colors.white, textureBytes: map.buffer.asUint8List());
 
-    final sphere = ArCoreSphere(
+    final sphere = ArCoreCylinder(
       materials: [material],
     );
 
@@ -37,4 +37,3 @@ class EventCamera extends StatelessWidget {
     arCoreController.addArCoreNode(node);
   }
 }
- */

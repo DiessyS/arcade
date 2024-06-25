@@ -7,7 +7,6 @@ import 'package:latlong2/latlong.dart';
 import '../models/event.dart';
 import 'models/event_service.dart';
 
-
 class MapService {
   late final LatLng initialLocation;
 
@@ -37,7 +36,7 @@ class MapService {
     return inside;
   }
 
-  double calculateBearing(double lat1, double lon1, double lat2, double lon2) {
+  double calculateBearing(double heading, double lat1, double lon1, double lat2, double lon2) {
     double dLon = _degreesToRadians(lon2 - lon1);
     lat1 = _degreesToRadians(lat1);
     lat2 = _degreesToRadians(lat2);
@@ -46,7 +45,7 @@ class MapService {
     double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
     double bearing = atan2(y, x);
 
-    return (_radiansToDegrees(bearing) + 360) % 360;
+    return (_radiansToDegrees(bearing) + heading) % 360;
   }
 
   double _degreesToRadians(double degrees) {

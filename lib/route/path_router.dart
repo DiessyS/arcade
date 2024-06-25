@@ -36,7 +36,7 @@ class PathRouter {
       pageBuilder: (context, animation, secondaryAnimation) => Material(
         child: Scaffold(
           body: widget,
-          bottomNavigationBar: withBottomNavigation ? BottomNavigation() : null,
+          bottomNavigationBar: withBottomNavigation ? const BottomNavigation() : null,
         ),
       ),
     );

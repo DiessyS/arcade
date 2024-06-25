@@ -26,13 +26,13 @@ class UserLocation extends StatelessWidget {
                     Text(
                       'Você',
                       style: TextStyle(
-                        color: Colors.red,
+                        color: Colors.black,
                       ),
                     ),
                     Icon(
                       Icons.location_on,
                       size: 25.0,
-                      color: Colors.red,
+                      color: Colors.black,
                     ),
                   ],
                 ),

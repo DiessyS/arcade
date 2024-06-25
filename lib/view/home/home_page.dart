@@ -1,6 +1,8 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:arcade/enum/home_page_modes.dart';
 import 'package:arcade/models/event.dart';
+import 'package:arcade/theme/theme_tokens.dart';
+import 'package:arcade/view/home/home/event_camera.dart';
 import 'package:arcade/view/home/home/event_map.dart';
 import 'package:arcade/view_model/auth_vm.dart';
 import 'package:arcade/view_model/compass_vm.dart';
@@ -26,7 +28,7 @@ class HomePage extends StatelessWidget {
 
     return SafeArea(
       child: Container(
-        color: const Color(0xFF070F2B),
+        color: ThemeTokens.backgroundColor,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Stack(
@@ -36,7 +38,7 @@ class HomePage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 child: switch (vm.mode) {
                   HomePageModes.rasterMap => EventMap(),
-                  HomePageModes.cameraARCore => Text(''),
+                  HomePageModes.cameraARCore => EventCamera(),
                 },
               ),
               Column(
@@ -111,9 +113,7 @@ class HomePage extends StatelessWidget {
                                 );
                               } else if (snapshot.connectionState == ConnectionState.done) {
                                 if (snapshot.data == null) {
-                                  return const Center(
-                                    child: Text("Nenhum lugar encontrado"),
-                                  );
+                                  return SizedBox.fromSize(size: const Size(0, 0));
                                 }
                                 return getPlaceSearch(snapshot.data, compassVM.startTracking);
                               }

@@ -2,9 +2,7 @@ import 'package:arcade/view_model/map/limit_vm.dart';
 import 'package:arcade/widgets/confirmation_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import 'package:widget_mask/widget_mask.dart';
 
 class Limit extends StatelessWidget {
   const Limit({super.key});

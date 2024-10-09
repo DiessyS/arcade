@@ -51,7 +51,7 @@ class EventInfo extends StatelessWidget {
               ),
             ),
             Text(
-              event.name,
+              event.identifier,
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 18,
@@ -67,7 +67,7 @@ class EventInfo extends StatelessWidget {
               ),
             ),
             Text(
-              event.description,
+              event.reference,
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 18,

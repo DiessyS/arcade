@@ -102,7 +102,7 @@ class EventList extends StatelessWidget {
                           splashColor: Colors.black.withOpacity(0.03),
                           overlayColor: MaterialStateProperty.all(Colors.black.withOpacity(0.03)),
                           child: ListTile(
-                            title: Text("${e.name} (${e.eventType.label})"),
+                            title: Text("${e.identifier} (${e.eventType.label})"),
                             subtitle: Text(
                               "Longitude: ${e.asLatLng().longitude.toStringAsFixed(4)} \nLatitude: ${e.asLatLng().latitude.toStringAsFixed(4)}",
                             ),

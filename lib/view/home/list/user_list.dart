@@ -64,7 +64,7 @@ class UserList extends StatelessWidget {
                                 PopupMenuItem(
                                   enabled: !e.banned,
                                   child: const Text(
-                                    'Banir',
+                                    'Bloquear usuario',
                                     style: TextStyle(fontWeight: FontWeight.w400),
                                   ),
                                   onTap: () async {
@@ -74,7 +74,7 @@ class UserList extends StatelessWidget {
                                 PopupMenuItem(
                                   enabled: e.banned,
                                   child: const Text(
-                                    'Desbanir',
+                                    'Desbloquear usuario',
                                     style: TextStyle(fontWeight: FontWeight.w400),
                                   ),
                                   onTap: () async {
@@ -105,7 +105,7 @@ class UserList extends StatelessWidget {
                               ),
                             ),
                             subtitle: Text(
-                              "${e.identifier} ${e.banned ? "(Banido)" : ""}",
+                              "${e.identifier} ${e.banned ? "(Usuario bloqueado)" : ""}",
                             ),
                             trailing: Text(
                               e.manager ? "Gerente" : "Usuário",

@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:arcade/models/user.dart';
-import 'package:arcade/service/http/http_service.dart';
+import 'package:arcade/service/http/arcade_backend_service.dart';
 import 'package:arcade/service_registers.dart';
 import 'package:http/http.dart';
 
 class UserService {
   Future<List<User>> getAll() async {
-    Response response = await service<HttpService>().get('/user', authenticated: true);
+    Response response = await service<ArcadeBackendService>().get('/user', authenticated: true);
     List<User> users = [];
 
     if (response.statusCode == 200) {
@@ -22,7 +22,7 @@ class UserService {
   }
 
   Future update(int id, bool banned) async {
-    Response response = await service<HttpService>().put(
+    Response response = await service<ArcadeBackendService>().put(
       '/user/$id',
       {'banned': banned.toString()},
       authenticated: true,
@@ -36,7 +36,7 @@ class UserService {
   }
 
   Future delete(int id) async {
-    Response response = await service<HttpService>().delete(
+    Response response = await service<ArcadeBackendService>().delete(
       '/user/$id',
       authenticated: true,
     );

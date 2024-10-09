@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
@@ -63,8 +60,7 @@ class LocationService {
       if (permission == LocationPermission.denied) {
         throw Exception("Location permissions are denied");
       } else if (permission == LocationPermission.deniedForever) {
-        throw Exception(
-            "Location permissions are permanently denied, we cannot request permissions.");
+        throw Exception("Location permissions are permanently denied, we cannot request permissions.");
       }
     }
   }

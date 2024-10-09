@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 class EventVM extends ChangeNotifier {
   Future addEvent(String name, String description, EventType eventType, Marker marker) async {
     Event event = Event();
-    event.name = name;
-    event.description = description;
+    event.identifier = name;
+    event.reference = description;
     event.eventType = eventType;
     event.marker = marker;
     event.createdBy = service<AuthService>().user!;

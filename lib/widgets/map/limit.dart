@@ -31,6 +31,8 @@ class Limit extends StatelessWidget {
                   isDotted: true,
                   borderColor: Colors.red,
                   borderStrokeWidth: 4.0,
+                  strokeJoin: StrokeJoin.round,
+                  strokeCap: StrokeCap.round,
                 ),
               ],
             );
@@ -39,8 +41,7 @@ class Limit extends StatelessWidget {
         Visibility(
           visible: vm.insertingLimit,
           child: ConfirmationOverlay(
-            message:
-                'Para adicionar o limite continue tocando nos pontos envolta da area que deseja limitar.',
+            message: 'Para adicionar o limite continue tocando nos pontos envolta da area que deseja limitar.',
             onConfirm: () async {
               await vm.saveLimit();
             },

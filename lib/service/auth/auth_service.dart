@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:arcade/models/user.dart';
-import 'package:arcade/service/http/http_service.dart';
+import 'package:arcade/service/http/arcade_backend_service.dart';
 import 'package:arcade/service_registers.dart';
 import 'package:http/http.dart';
 
@@ -14,7 +14,7 @@ class AuthService {
   }
 
   login(String identifier, String password) async {
-    Response response = await service<HttpService>().post('/login', {
+    Response response = await service<ArcadeBackendService>().post('/login', {
       'identifier': identifier,
       'password': password,
     });

@@ -1,1 +1,4 @@
-enum HomePageModes { rasterMap, cameraARCore }
+enum HomePageModes {
+  rasterMap,
+  cameraARCore;
+}

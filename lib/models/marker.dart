@@ -32,7 +32,11 @@ class Marker {
     };
   }
 
-  Marker.fromJson(Map<String, dynamic> json) {
+  Marker.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return;
+    }
+
     latitude = json['latitude'];
     longitude = json['longitude'];
     altitude = json['altitude'];

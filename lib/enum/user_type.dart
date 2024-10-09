@@ -1,1 +1,5 @@
-enum UserType { admin, manager, user }
+enum UserType {
+  admin,
+  manager,
+  user;
+}

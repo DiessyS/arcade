@@ -8,7 +8,7 @@ class PathRouter {
   int navigationIndex = 0;
 
   Route<dynamic> generateRoute(RouteSettings settings) {
-    String route = settings.name!;
+    final String route = settings.name!;
 
     switch (route) {
       case '/main_page':

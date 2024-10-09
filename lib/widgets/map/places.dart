@@ -69,8 +69,8 @@ class Places extends StatelessWidget {
                                 'Ir para',
                                 style: TextStyle(fontWeight: FontWeight.w400),
                               ),
-                              onTap: () {
-                                compassVM.startTracking(e);
+                              onTap: () async {
+                                await compassVM.startTracking(e);
                               },
                             ),
                             PopupMenuItem(
@@ -101,7 +101,7 @@ class Places extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            e.name,
+                            e.identifier,
                             style: TextStyle(
                               color: e.eventType.color,
                             ),

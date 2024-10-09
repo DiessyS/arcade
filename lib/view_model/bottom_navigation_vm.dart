@@ -26,6 +26,6 @@ class BottomNavigationVM extends ChangeNotifier {
   }
 
   Color getColorByActivity(index) {
-    return (navigationIndex == index) ? Colors.black.withOpacity(0.08) : Colors.transparent;
+    return (navigationIndex == index) ? Colors.black.withOpacity(0.1) : Colors.transparent;
   }
 }

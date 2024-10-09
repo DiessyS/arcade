@@ -3,10 +3,10 @@ import 'package:arcade/service/auth/auth_service.dart';
 import 'package:arcade/service_registers.dart';
 import 'package:http/http.dart' as http;
 
-class HttpService {
+class ArcadeBackendService {
   late final String baseUrl;
 
-  HttpService() {
+  ArcadeBackendService() {
     baseUrl = 'http://192.168.15.12:8080';
   }
 
@@ -22,8 +22,7 @@ class HttpService {
     return await http.get(url, headers: headers);
   }
 
-  Future<http.Response> post(String endpoint, Map<String, dynamic> data,
-      {bool authenticated = false}) async {
+  Future<http.Response> post(String endpoint, Map<String, dynamic> data, {bool authenticated = false}) async {
     final url = Uri.parse('$baseUrl$endpoint');
 
     Map<String, String>? headers = {'Content-Type': 'application/json'};
@@ -39,8 +38,7 @@ class HttpService {
     );
   }
 
-  Future<http.Response> put(String endpoint, Map<String, dynamic> data,
-      {bool authenticated = false}) async {
+  Future<http.Response> put(String endpoint, Map<String, dynamic> data, {bool authenticated = false}) async {
     final url = Uri.parse('$baseUrl$endpoint');
 
     Map<String, String>? headers = {'Content-Type': 'application/json'};

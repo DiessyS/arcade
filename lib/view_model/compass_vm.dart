@@ -1,4 +1,5 @@
 import 'package:arcade/models/event.dart';
+import 'package:arcade/service/find_service.dart';
 import 'package:arcade/service/location_service.dart';
 import 'package:arcade/service/map_service.dart';
 import 'package:arcade/service_registers.dart';
@@ -16,11 +17,20 @@ class CompassVM extends ChangeNotifier {
   int timerIntervalDisablingTracking = 5000;
   bool isTrackingFinished = false;
 
-  startTracking(Event target) {
-    isTrackingFinished = false;
-    location = service<LocationService>().getLocation();
-    this.target = target.asLatLng();
-    targetName = target.name;
+  List<LatLng> findResults = [];
+
+  startTracking(Event target) async {
+    Position position = await service<LocationService>().determinePosition();
+
+    Event? origin = Event();
+
+    origin.marker.latitude = position.latitude;
+    origin.marker.longitude = position.longitude;
+
+    final List<Event> events = await service<FindService>().find(origin, target);
+
+    findResults = events.map((e) => e.marker.toLatLng()).toList();
+
     notifyListeners();
   }
 

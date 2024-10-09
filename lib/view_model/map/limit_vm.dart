@@ -19,15 +19,12 @@ class LimitVM extends ChangeNotifier {
   }
 
   insertLimit(LatLng latlng) {
-    Event event = Event();
-    event.eventType = EventType.limit;
-    event.name = 'Limite';
-    event.description = 'Limite do mapa';
-    event.createdBy = service<AuthService>().user!;
-    event.marker = Marker.fromLatLng(latlng);
+    final Event event = Event()
+      ..eventType = EventType.limit
+      ..createdBy = service<AuthService>().user!
+      ..marker = Marker.fromLatLng(latlng);
 
     limitBuffer.add(event);
-
     insertingLimit = true;
     notifyListeners();
   }

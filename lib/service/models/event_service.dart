@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:arcade/enum/event_type.dart';
 import 'package:arcade/models/event.dart';
-import 'package:arcade/service/http/http_service.dart';
+import 'package:arcade/service/http/arcade_backend_service.dart';
 import 'package:arcade/service_registers.dart';
 import 'package:http/http.dart';
 
 class EventService {
   Future add(Event event) async {
-    Response response = await service<HttpService>().post(
+    Response response = await service<ArcadeBackendService>().post(
       '/event',
       event.toJson(),
       authenticated: true,
@@ -22,7 +22,7 @@ class EventService {
   }
 
   Future delete(int id) async {
-    Response response = await service<HttpService>().delete(
+    Response response = await service<ArcadeBackendService>().delete(
       '/event/$id',
       authenticated: true,
     );
@@ -35,7 +35,7 @@ class EventService {
   }
 
   Future<List<Event>> getByEventType(EventType type) async {
-    Response response = await service<HttpService>().get(
+    Response response = await service<ArcadeBackendService>().get(
       '/event/type/${type.value}',
       authenticated: true,
     );
@@ -53,7 +53,7 @@ class EventService {
   }
 
   Future deleteByEventType(EventType type) async {
-    Response response = await service<HttpService>().delete(
+    Response response = await service<ArcadeBackendService>().delete(
       '/event/type/${type.value}',
       authenticated: true,
     );

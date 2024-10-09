@@ -24,7 +24,11 @@ class User {
     };
   }
 
-  User.fromJson(Map<String, dynamic> json) {
+  User.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return;
+    }
+
     id = json['id'];
     identifier = json['identifier'];
     name = json['name'];

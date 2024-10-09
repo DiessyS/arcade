@@ -2,7 +2,6 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:arcade/enum/home_page_modes.dart';
 import 'package:arcade/models/event.dart';
 import 'package:arcade/theme/theme_tokens.dart';
-import 'package:arcade/view/home/home/event_camera.dart';
 import 'package:arcade/view/home/home/event_map.dart';
 import 'package:arcade/view_model/auth_vm.dart';
 import 'package:arcade/view_model/compass_vm.dart';
@@ -38,7 +37,7 @@ class HomePage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 child: switch (vm.mode) {
                   HomePageModes.rasterMap => EventMap(),
-                  HomePageModes.cameraARCore => EventCamera(),
+                  HomePageModes.cameraARCore => Text(''),
                 },
               ),
               Column(
@@ -84,8 +83,7 @@ class HomePage extends StatelessWidget {
                                 },
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(Colors.white),
-                                  overlayColor:
-                                      MaterialStateProperty.all(Colors.black.withOpacity(0.1)),
+                                  overlayColor: MaterialStateProperty.all(Colors.black.withOpacity(0.1)),
                                   splashFactory: InkSparkle.splashFactory,
                                   elevation: MaterialStateProperty.all(2),
                                   shape: MaterialStateProperty.all(
@@ -124,7 +122,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const MapLegend(),
+                  //const MapLegend(),
                 ],
               ),
             ],

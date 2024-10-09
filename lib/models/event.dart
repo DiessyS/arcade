@@ -7,8 +7,8 @@ import 'user.dart';
 class Event {
   int id = 0;
 
-  String name = "";
-  String description = '';
+  String identifier = "";
+  String reference = "";
   EventType eventType = EventType.place;
 
   Marker marker = Marker();
@@ -23,14 +23,14 @@ class Event {
 
   @override
   String toString() {
-    return name;
+    return identifier;
   }
 
   toJson() {
     return {
       'id': id,
-      'name': name,
-      'description': description,
+      'identifier': identifier,
+      'reference': reference,
       'eventType': eventType.value,
       'marker': marker.toJson(),
       'createdBy': createdBy.toJson(),
@@ -39,8 +39,8 @@ class Event {
 
   Event.fromJson(Map<String, dynamic> map) {
     id = map['id'];
-    name = map['name'];
-    description = map['description'];
+    identifier = map['identifier'];
+    reference = map['reference'];
     eventType = EventType.fromString(map['eventType']);
     marker = Marker.fromJson(map['marker']);
     createdBy = User.fromJson(map['createdBy']);

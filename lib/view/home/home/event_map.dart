@@ -2,28 +2,28 @@ import 'package:arcade/view_model/compass_vm.dart';
 import 'package:arcade/view_model/event_map_vm.dart';
 import 'package:arcade/view_model/map/limit_vm.dart';
 import 'package:arcade/view_model/auth_vm.dart';
-import 'package:arcade/view_model/map/path_vm.dart';
+import 'package:arcade/view_model/map/path_line_vm.dart';
+import 'package:arcade/widgets/bottom_modal.dart';
 import 'package:arcade/widgets/event_form.dart';
 import 'package:arcade/widgets/map/compass.dart';
 import 'package:arcade/widgets/map/limit.dart';
 import 'package:arcade/widgets/map/places.dart';
-import 'package:arcade/widgets/map/routing_path.dart';
+import 'package:arcade/widgets/map/route_guide.dart';
+import 'package:arcade/widgets/map/path_line.dart';
 import 'package:arcade/widgets/map/user_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:provider/provider.dart';
 
 class EventMap extends StatelessWidget {
-  EventMap({super.key}) {
-    mapController = MapController();
-  }
+  EventMap({super.key});
 
-  late final MapController mapController;
+  final MapController mapController = MapController();
 
   @override
   Widget build(BuildContext context) {
     final LimitVM limitVM = Provider.of<LimitVM>(context);
-    final PathVM pathVM = Provider.of<PathVM>(context);
+    final PathLineVM pathVM = Provider.of<PathLineVM>(context);
     final AuthVM authVM = Provider.of<AuthVM>(context);
     final EventMapVM vm = Provider.of<EventMapVM>(context);
     final CompassVM compassVM = Provider.of<CompassVM>(context);
@@ -40,10 +40,13 @@ class EventMap extends StatelessWidget {
             limitVM.insertLimit(latlng);
           }
           if (pathVM.insertingPath) {
-            if (pathVM.isPathEmpty()) {
+            if (pathVM.begin != null) {
               pathVM.insertPathNode(latlng);
-            } else {
-              pathVM.insertPathNodeWithReference(latlng);
+              return;
+            }
+
+            if (pathVM.pathBuffer.isEmpty) {
+              pathVM.insertPathNode(latlng);
             }
           }
         },
@@ -69,21 +72,15 @@ class EventMap extends StatelessWidget {
               PopupMenuItem(
                 enabled: authVM.isUserManager(),
                 onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    useSafeArea: true,
-                    isScrollControlled: true,
-                    builder: (context) => Padding(
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
-                      child: EventForm(
-                        latlng: latlng,
-                        isTemp: false,
-                        onEventCreated: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
+                  BottomModal.show(
+                    context,
+                    "Criar lugar",
+                    EventForm(
+                      latlng: latlng,
+                      isTemp: false,
+                      onEventCreated: () {
+                        Navigator.of(context).pop();
+                      },
                     ),
                   );
                 },
@@ -98,44 +95,18 @@ class EventMap extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.w400),
                 ),
                 onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    useSafeArea: true,
-                    isScrollControlled: true,
-                    builder: (context) => Padding(
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
-                      child: EventForm(
-                        latlng: latlng,
-                        isTemp: true,
-                        onEventCreated: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
+                  BottomModal.show(
+                    context,
+                    "Criar lugar temporario",
+                    EventForm(
+                      latlng: latlng,
+                      isTemp: true,
+                      onEventCreated: () {
+                        Navigator.of(context).pop();
+                      },
                     ),
                   );
                 },
-              ),
-              PopupMenuItem(
-                enabled: authVM.isUserManager(),
-                onTap: () async {
-                  limitVM.insertLimit(latlng);
-                },
-                child: const Text(
-                  'Criar limite',
-                  style: TextStyle(fontWeight: FontWeight.w400),
-                ),
-              ),
-              PopupMenuItem(
-                enabled: authVM.isUserManager() && pathVM.isPathEmpty(),
-                onTap: () async {
-                  pathVM.insertPathNode(latlng);
-                },
-                child: const Text(
-                  'Criar caminho',
-                  style: TextStyle(fontWeight: FontWeight.w400),
-                ),
               ),
             ],
           );
@@ -146,21 +117,26 @@ class EventMap extends StatelessWidget {
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'dev.arcade',
         ),
-        const Limit(),
-        const Places(),
-        const UserLocation(),
-        authVM.isUserManager() ? const RoutingNodes() : SizedBox.fromSize(),
-        const Compass(),
-        PolylineLayer(
-          polylines: [
-            Polyline(
-              points: compassVM.findResults,
-              color: Colors.red,
-              strokeWidth: 5.0,
-            ),
-          ],
-        ),
+        ..._getOverlays(authVM, compassVM),
       ],
     );
+  }
+
+  List<Widget> _getOverlays(AuthVM authVM, CompassVM compassVM) {
+    final List<Widget> overlays = [
+      const Limit(),
+      const Places(),
+      const UserLocation(),
+      const PathLine(),
+      const Compass(),
+    ];
+
+    if (authVM.isUserManager()) {
+      overlays.add(const PathLine());
+    }
+
+    overlays.add(const RouteGuide());
+
+    return overlays;
   }
 }

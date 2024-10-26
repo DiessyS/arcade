@@ -18,6 +18,11 @@ class LimitVM extends ChangeNotifier {
     limitBuffer = [];
   }
 
+  startLimitInsertion() {
+    insertingLimit = true;
+    notifyListeners();
+  }
+
   insertLimit(LatLng latlng) {
     final Event event = Event()
       ..eventType = EventType.limit
@@ -25,7 +30,6 @@ class LimitVM extends ChangeNotifier {
       ..marker = Marker.fromLatLng(latlng);
 
     limitBuffer.add(event);
-    insertingLimit = true;
     notifyListeners();
   }
 
@@ -36,6 +40,13 @@ class LimitVM extends ChangeNotifier {
       await service<EventService>().add(event);
     }
 
+    insertingLimit = false;
+    limitBuffer = [];
+    notifyListeners();
+  }
+
+  deleteLimit() async {
+    await service<EventService>().deleteByEventType(EventType.limit);
     insertingLimit = false;
     limitBuffer = [];
     notifyListeners();

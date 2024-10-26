@@ -7,7 +7,7 @@ class ArcadeBackendService {
   late final String baseUrl;
 
   ArcadeBackendService() {
-    baseUrl = 'http://192.168.15.12:8080';
+    baseUrl = 'http://172.20.10.2:8080';
   }
 
   Future<http.Response> get(String endpoint, {bool authenticated = false}) async {

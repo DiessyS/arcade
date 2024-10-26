@@ -1,7 +1,9 @@
 import 'package:arcade/theme/theme_tokens.dart';
 import 'package:arcade/view/home/perfil_page.dart';
+import 'package:arcade/view_model/auth_vm.dart';
 import 'package:arcade/view_model/bottom_navigation_vm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavigation extends StatelessWidget {
@@ -9,7 +11,8 @@ class BottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BottomNavigationVM vm = Provider.of<BottomNavigationVM>(context);
+    final BottomNavigationVM vm = Provider.of<BottomNavigationVM>(context);
+    final AuthVM authVM = Provider.of<AuthVM>(context);
 
     return Container(
       padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
@@ -21,11 +24,18 @@ class BottomNavigation extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(16),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 12,
+                    offset: const Offset(2, 2),
+                  ),
+                ],
               ),
               height: 84,
               width: double.infinity,
@@ -37,25 +47,27 @@ class BottomNavigation extends StatelessWidget {
                     Icons.person_outline,
                     vm,
                     callback: () {
-                      openPerfilPage(context);
+                      Navigator.of(context).pushNamed('/perfil_page');
                     },
                   ),
                   _buttonOnBottomNavigation(
                     1,
-                    Icons.home_outlined,
+                    Icons.map,
                     vm,
+                    flex: 3,
                     callback: () {
-                      Navigator.of(context).pushNamed('/home_page');
+                      Navigator.of(context).pushNamed('/map_page');
                     },
                   ),
-                  _buttonOnBottomNavigation(
-                    2,
-                    Icons.list_alt_outlined,
-                    vm,
-                    callback: () {
-                      Navigator.of(context).pushNamed('/list_page');
-                    },
-                  ),
+                  if (authVM.isAuthenticated() && authVM.getUser()!.manager)
+                    _buttonOnBottomNavigation(
+                      2,
+                      Icons.person_search,
+                      vm,
+                      callback: () {
+                        Navigator.of(context).pushNamed('/users_page');
+                      },
+                    ),
                 ],
               ),
             ),
@@ -65,34 +77,15 @@ class BottomNavigation extends StatelessWidget {
     );
   }
 
-  openPerfilPage(context) {
-    showModalBottomSheet(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-      ),
-      backgroundColor: Colors.white,
-      context: context,
-      useSafeArea: true,
-      isScrollControlled: true,
-      builder: (context) => Container(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: const PerfilPage(),
-      ),
-    );
-  }
-
   _buttonOnBottomNavigation(
     int index,
     IconData icon,
     BottomNavigationVM vm, {
     required VoidCallback? callback,
+    int flex = 1,
   }) {
     return Expanded(
+      flex: flex,
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: TextButton(
@@ -103,9 +96,9 @@ class BottomNavigation extends StatelessWidget {
             vm.setIndex(index);
           },
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(vm.getColorByActivity(index)),
-            fixedSize: MaterialStateProperty.all(const Size(64, 84)),
-            shape: MaterialStateProperty.all(
+            backgroundColor: WidgetStateProperty.all(vm.getColorByActivity(index)),
+            fixedSize: WidgetStateProperty.all(const Size(64, 84)),
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),

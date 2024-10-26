@@ -1,9 +1,11 @@
 import 'package:arcade/view_model/compass_vm.dart';
 import 'package:arcade/view_model/auth_vm.dart';
 import 'package:arcade/view_model/map/event_vm.dart';
+import 'package:arcade/widgets/confirmation_modal.dart';
 import 'package:arcade/widgets/event_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 class Places extends StatelessWidget {
@@ -61,7 +63,23 @@ class Places extends StatelessWidget {
                                 style: TextStyle(fontWeight: FontWeight.w400),
                               ),
                               onTap: () async {
-                                eventVM.deleteEvent(e.id);
+                                showConfirmationModal(
+                                  context,
+                                  'Remover evento',
+                                  'Deseja realmente remover o evento?',
+                                  () async {
+                                    Navigator.of(context).pop();
+                                    await eventVM.deleteEvent(e.id);
+                                    showToast(
+                                      'Evento removido com sucesso',
+                                      position: ToastPosition.bottom,
+                                      radius: 16,
+                                      textStyle: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  },
+                                );
                               },
                             ),
                             PopupMenuItem(

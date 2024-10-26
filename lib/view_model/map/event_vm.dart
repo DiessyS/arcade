@@ -1,6 +1,7 @@
 import 'package:arcade/enum/event_type.dart';
 import 'package:arcade/models/event.dart';
 import 'package:arcade/models/marker.dart';
+import 'package:arcade/models/user.dart';
 import 'package:arcade/service/auth/auth_service.dart';
 import 'package:arcade/service/models/event_service.dart';
 import 'package:arcade/service_registers.dart';
@@ -28,6 +29,11 @@ class EventVM extends ChangeNotifier {
     List<Event> permanentPlaces = await service<EventService>().getByEventType(EventType.place);
     List<Event> tempPlaces = await service<EventService>().getByEventType(EventType.temp);
     return [...permanentPlaces, ...tempPlaces];
+  }
+
+  Future<List<Event>> getMyPlaceAndTempEvents(User user) async {
+    final List<Event> events = await getPlaceAndTempEvents();
+    return events.where((event) => event.createdBy.id == user.id).toList();
   }
 
   Future<List<Event>> getPlacesEvents() async {

@@ -1,16 +1,16 @@
-import 'package:arcade/view_model/map/path_vm.dart';
+import 'package:arcade/view_model/map/path_line_vm.dart';
 import 'package:arcade/widgets/confirmation_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
-class RoutingNodes extends StatelessWidget {
-  const RoutingNodes({super.key});
+class PathLine extends StatelessWidget {
+  const PathLine({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final vm = Provider.of<PathVM>(context);
+    final vm = Provider.of<PathLineVM>(context);
 
     return FutureBuilder(
       future: vm.getPaths(),
@@ -26,17 +26,12 @@ class RoutingNodes extends StatelessWidget {
             );
           }
 
+          if (!vm.insertingPath) {
+            return const SizedBox();
+          }
+
           return Stack(
             children: [
-              PolylineLayer(
-                polylines: [
-                  Polyline(
-                    points: vm.polylineBuffer,
-                    color: Colors.orange,
-                    strokeWidth: 5.0,
-                  ),
-                ],
-              ),
               PolylineLayer(
                 polylines: snapshot.data!
                     .map(
@@ -58,55 +53,53 @@ class RoutingNodes extends StatelessWidget {
                         width: 32,
                         height: 32,
                         point: e.end.asLatLng(),
-                        child: Stack(
-                          children: [
-                            IconButton(
-                              style: ButtonStyle(
-                                backgroundColor: WidgetStateProperty.all(
-                                  Colors.white.withOpacity(0.5),
-                                ),
-                                side: WidgetStateProperty.all(
-                                  const BorderSide(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              icon: const Icon(
-                                Icons.add,
-                                size: 16,
-                              ),
-                              onPressed: () {
-                                if (vm.insertingPath) {
-                                  if (e.begin.asLatLng() == e.end.asLatLng()) {
-                                    vm.resetInsertion();
-                                    showToast(
-                                      "Não é possivel ligar o caminho a si mesmo",
-                                      position: ToastPosition.bottom,
-                                    );
-                                    return;
-                                  }
-                                  vm.insertPathNodeWithReference(e.end.asLatLng());
-                                  return;
-                                }
-                                vm.startInsertionByReference(e.end.asLatLng());
-                              },
+                        child: IconButton(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all(
+                              Colors.white.withOpacity(0.5),
                             ),
-                          ],
+                            side: WidgetStateProperty.all(
+                              const BorderSide(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          icon: const Icon(
+                            Icons.add,
+                            size: 16,
+                          ),
+                          onPressed: () {
+                            if (e.begin.asLatLng().toSexagesimal() == e.end.asLatLng().toSexagesimal()) {
+                              showToast(
+                                "Não é possivel ligar o caminho a si mesmo",
+                                position: ToastPosition.bottom,
+                              );
+                              return;
+                            }
+                            vm.insertPathNode(e.end.asLatLng());
+                          },
                         ),
                       ),
                     )
                     .toList(),
               ),
               Visibility(
-                visible: vm.isUnsaved,
+                visible: vm.insertingPath,
                 child: ConfirmationOverlay(
-                  message: 'Para adicionar o limite continue tocando nos pontos envolta da area que deseja limitar.',
+                  message: vm.paths.isEmpty && vm.pathBuffer.isEmpty
+                      ? 'Toque no inicio da rota e logo em seguida no ponto final'
+                      : 'Para adicionar uma rota conecte os pontos criados',
                   onConfirm: () async {
                     await vm.saveLimit();
+
+                    showToast(
+                      "Caminho salvo com sucesso",
+                      position: ToastPosition.bottom,
+                    );
                   },
                   confirmText: 'Finalizar',
                   onCancel: () {
-                    vm.cancelInsertion();
+                    vm.cancelPathInsertion();
                   },
                   cancelText: 'Cancelar',
                 ),

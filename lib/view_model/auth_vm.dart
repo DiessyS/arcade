@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 
 class AuthVM extends ChangeNotifier {
-  login(String identifier, String password, BuildContext context) {
+  Future login(String identifier, String password, BuildContext context) async {
     try {
-      service<AuthService>().login(identifier, password);
-      Navigator.pop(context);
+      await service<AuthService>().login(identifier, password);
+      Navigator.of(context).pushNamed('/perfil_page');
     } catch (e) {
       showToast(
         'Não é possivel efetuar o login ${e.toString()}',
@@ -22,16 +22,16 @@ class AuthVM extends ChangeNotifier {
     return service<AuthService>().user;
   }
 
-  logout() {
-    service<AuthService>().logout();
-    notifyListeners();
+  logout(context) async {
+    await service<AuthService>().logout();
+    Navigator.of(context).pushNamed('/login_page');
   }
 
-  isAuthenticated() {
+  bool isAuthenticated() {
     return service<AuthService>().isAuthenticated();
   }
 
-  isUserManager() {
+  bool isUserManager() {
     User? user = service<AuthService>().user;
     if (user == null) {
       return false;

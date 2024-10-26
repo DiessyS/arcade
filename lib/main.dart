@@ -10,7 +10,8 @@ import 'package:arcade/view_model/home_page_vm.dart';
 import 'package:arcade/view_model/map/event_vm.dart';
 import 'package:arcade/view_model/map/limit_vm.dart';
 import 'package:arcade/view_model/list/list_events_vm.dart';
-import 'package:arcade/view_model/map/path_vm.dart';
+import 'package:arcade/view_model/map/path_line_vm.dart';
+import 'package:arcade/view_model/perfil_vm.dart';
 import 'package:arcade/view_model/user_vm.dart';
 import 'package:arcade/view_model/auth_vm.dart';
 import 'package:arcade/view_model/user_location_vm.dart';
@@ -37,11 +38,11 @@ void main() async {
       ChangeNotifierProvider(create: (_) => EventMapVM()),
       ChangeNotifierProvider(create: (_) => EventVM()),
       ChangeNotifierProvider(create: (_) => CompassVM()),
-      ChangeNotifierProvider(create: (_) => PathVM()),
+      ChangeNotifierProvider(create: (_) => PathLineVM()),
       ChangeNotifierProvider(create: (_) => HomePageVM()),
       ChangeNotifierProvider(create: (_) => BottomNavigationVM()),
       ChangeNotifierProvider(create: (_) => UsersVM()),
-      ChangeNotifierProvider(create: (_) => ListEventsVM()),
+      ChangeNotifierProvider(create: (_) => PerfilVM()),
       ChangeNotifierProvider(create: (_) => UserLocationVM()),
     ],
     child: Main(
@@ -68,7 +69,7 @@ class Main extends StatelessWidget {
         title: 'ARcade',
         themeMode: ThemeMode.dark,
         onGenerateRoute: PathRouter().generateRoute,
-        initialRoute: isBackendAvailable && isMapServiceOperational ? '/main_page' : '/offline',
+        initialRoute: isBackendAvailable && isMapServiceOperational ? '/map_page' : '/offline',
       ),
     );
   }

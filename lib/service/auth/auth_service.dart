@@ -13,7 +13,7 @@ class AuthService {
     return authToken.isNotEmpty;
   }
 
-  login(String identifier, String password) async {
+  Future login(String identifier, String password) async {
     Response response = await service<ArcadeBackendService>().post('/login', {
       'identifier': identifier,
       'password': password,

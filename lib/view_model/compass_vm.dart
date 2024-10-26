@@ -20,6 +20,13 @@ class CompassVM extends ChangeNotifier {
   List<LatLng> findResults = [];
 
   startTracking(Event target) async {
+    isTrackingFinished = false;
+    location = service<LocationService>().getLocation();
+
+    this.target = target.asLatLng();
+
+    targetName = target.identifier;
+
     Position position = await service<LocationService>().determinePosition();
 
     Event? origin = Event();

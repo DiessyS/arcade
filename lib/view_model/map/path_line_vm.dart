@@ -9,51 +9,43 @@ import 'package:flutter/cupertino.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:uuid/uuid.dart';
 
-class PathVM extends ChangeNotifier {
-  late List<LatLng> polylineBuffer;
-  late List<PathDTO> pathBuffer;
+class PathLineVM extends ChangeNotifier {
   late List<PathDTO> paths;
+  late List<PathDTO> pathBuffer;
   late bool insertingPath;
-  late bool isUnsaved;
 
-  PathVM() {
+  LatLng? begin;
+  LatLng? end;
+
+  PathLineVM() {
     insertingPath = false;
-    isUnsaved = false;
     paths = [];
-    polylineBuffer = [];
     pathBuffer = [];
   }
 
+  startPathInsertion() {
+    insertingPath = true;
+    notifyListeners();
+  }
+
+  cancelPathInsertion() {
+    insertingPath = false;
+    pathBuffer = [];
+    begin = null;
+    end = null;
+    notifyListeners();
+  }
+
   insertPathNode(LatLng latlng) {
-    insertingPath = true;
-    isUnsaved = true;
-    polylineBuffer.add(latlng);
-
-    if (polylineBuffer.length == 2) {
-      insertPath(polylineBuffer[0], polylineBuffer[1]);
-      resetInsertion();
-      return;
+    if (begin == null) {
+      begin = latlng;
+    } else {
+      end = latlng;
+      insertPath(begin!, end!);
+      begin = null;
+      end = null;
     }
-
     notifyListeners();
-  }
-
-  startInsertionByReference(LatLng latlng) {
-    insertingPath = true;
-    polylineBuffer.add(latlng);
-    notifyListeners();
-  }
-
-  insertPathNodeWithReference(LatLng latlng) {
-    polylineBuffer.add(latlng);
-
-    if (polylineBuffer.length != 2) {
-      resetInsertion();
-      throw Exception("Wrong buffer size");
-    }
-
-    insertPath(polylineBuffer[0], polylineBuffer[1]);
-    resetInsertion();
   }
 
   insertPath(LatLng begin, LatLng end) {
@@ -77,21 +69,9 @@ class PathVM extends ChangeNotifier {
     pathBuffer.add(path);
   }
 
-  bool isPathEmpty() {
-    return pathBuffer.isEmpty;
-  }
-
-  void resetInsertion() {
-    insertingPath = false;
-    polylineBuffer = [];
-    notifyListeners();
-  }
-
-  void cancelInsertion() {
-    insertingPath = false;
-    polylineBuffer = [];
-    pathBuffer = [];
-    isUnsaved = false;
+  deletePaths() async {
+    await service<EventService>().deleteByEventType(EventType.path);
+    paths = [];
     notifyListeners();
   }
 
@@ -100,14 +80,18 @@ class PathVM extends ChangeNotifier {
       await service<EventService>().add(event.begin);
       await service<EventService>().add(event.end);
     }
-    isUnsaved = false;
+    pathBuffer = [];
+    insertingPath = false;
+    begin = null;
+    end = null;
     notifyListeners();
   }
 
   Future<List<PathDTO>> getPaths() async {
     final List<Event> events = await service<EventService>().getByEventType(EventType.path);
-    final List<PathDTO> paths = [];
     final List<String> uniqueIds = [];
+
+    paths.clear();
 
     for (Event event in events) {
       if (!uniqueIds.contains(event.identifier)) {

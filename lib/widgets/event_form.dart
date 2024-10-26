@@ -45,106 +45,77 @@ class _EventFormState extends State<EventForm> {
 
     checkBoundaries(context);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Criar lugar ${widget.isTemp ? "temporario" : ""}',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                    ),
-                  ),
-                  //close
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-              SizedBox.fromSize(size: const Size(0, 32)),
-              TextFormField(
-                  controller: titleController,
-                  decoration: InputDecoration(
-                    labelText: 'Titulo',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira um titulo';
-                    }
-                    return null;
-                  }),
-              SizedBox.fromSize(size: const Size(0, 16)),
-              TextFormField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                    labelText: 'Descrição',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira uma descrição';
-                    }
-                    return null;
-                  }),
-              SizedBox.fromSize(size: const Size(0, 16)),
-              FilledButton(
-                onPressed: () async {
-                  if (!_formKey.currentState!.validate()) {
-                    return;
-                  }
-                  try {
-                    await eventVM.addEvent(
-                      titleController.text,
-                      descriptionController.text,
-                      widget.isTemp ? EventType.temp : EventType.place,
-                      Marker.fromLatLng(widget.latlng),
-                    );
-                  } catch (e) {
-                    showToast(e.toString(), position: ToastPosition.bottom);
-                    return;
-                  }
-
-                  widget.onEventCreated();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(ThemeTokens.backgroundColor),
-                  fixedSize: MaterialStateProperty.all(
-                    const Size(
-                      double.infinity,
-                      48,
-                    ),
-                  ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
+    return Form(
+      key: _formKey,
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          TextFormField(
+              controller: titleController,
+              decoration: InputDecoration(
+                labelText: 'Titulo',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Text('Criar'),
               ),
-            ],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, insira um titulo';
+                }
+                return null;
+              }),
+          SizedBox.fromSize(size: const Size(0, 16)),
+          TextFormField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                labelText: 'Descrição',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, insira uma descrição';
+                }
+                return null;
+              }),
+          SizedBox.fromSize(size: const Size(0, 16)),
+          FilledButton(
+            onPressed: () async {
+              if (!_formKey.currentState!.validate()) {
+                return;
+              }
+              try {
+                await eventVM.addEvent(
+                  titleController.text,
+                  descriptionController.text,
+                  widget.isTemp ? EventType.temp : EventType.place,
+                  Marker.fromLatLng(widget.latlng),
+                );
+              } catch (e) {
+                showToast(e.toString(), position: ToastPosition.bottom);
+                return;
+              }
+
+              widget.onEventCreated();
+            },
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all(ThemeTokens.buttonColor),
+              fixedSize: MaterialStateProperty.all(
+                const Size(
+                  double.infinity,
+                  48,
+                ),
+              ),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+            child: const Text('Criar'),
           ),
-        ),
+        ],
       ),
     );
   }
